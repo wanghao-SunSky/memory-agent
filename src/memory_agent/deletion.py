@@ -52,12 +52,17 @@ def delete_memory(engine: Engine, space_id: int, memory_id: int) -> dict:
                                  WHERE kind='extract' AND status IN ('queued') AND (payload->>'episode_id')::bigint = ANY(:ids)"""), {"ids": episode_ids})
             conn.execute(text("UPDATE facts SET supersedes_id=NULL WHERE supersedes_id = ANY(:ids)"), {"ids": fact_ids})
             n_facts = conn.execute(text("DELETE FROM facts WHERE id = ANY(:ids)"), {"ids": fact_ids}).rowcount
+            # 同一来源轮次派生出的其他事实（不同版本链）保留，但出处原文已删除；返回给调用方以便提示用户
+            siblings = [r[0] for r in conn.execute(
+                text("SELECT id FROM facts WHERE space_id=:s AND source_episode_ids && CAST(:e AS bigint[]) AND status='active'"),
+                {"s": space_id, "e": episode_ids})]
             # 审计行保留，但擦掉其中的正文
             conn.execute(text("""UPDATE memory_ops SET before=NULL, after=jsonb_build_object('scrubbed', true)
                                  WHERE space_id=:s AND (fact_id = ANY(:f) OR episode_id = ANY(:e))"""),
                          {"s": space_id, "f": fact_ids, "e": episode_ids})
             scope = {"fact_ids": fact_ids, "episode_ids": episode_ids, "deleted_facts": n_facts,
-                     "deleted_fact_keys": n_fact_keys, "deleted_episode_keys": n_ep_keys, "episode_content": "physically_deleted"}
+                     "deleted_fact_keys": n_fact_keys, "deleted_episode_keys": n_ep_keys, "episode_content": "physically_deleted",
+                     "sibling_facts_kept": siblings}
             conn.execute(text("""INSERT INTO memory_ops(space_id, op, fact_id, after, reason, actor, trace_id)
                                  VALUES (:s,'DELETE',:f,CAST(:a AS jsonb),'用户删除','user',:t)"""),
                          {"s": space_id, "f": memory_id, "a": json.dumps(scope), "t": current_trace_id()})

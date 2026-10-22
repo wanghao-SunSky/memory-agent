@@ -101,3 +101,19 @@ def test_api_delete_and_cross_owner_404(client, engine, owner, models):
     r = client.delete(f"/memories/{f['id']}", headers={"X-Owner-Id": owner}).json()
     assert r["result"] == "verified"
     assert client.get("/memories?space=work", headers={"X-Owner-Id": owner}).json()["memories"] == []
+
+
+def test_sibling_facts_from_same_episode_are_reported(engine, owner):
+    """一句话拆成两条记忆：删一条，另一条保留，并在 scope.sibling_facts_kept 里如实报告。"""
+    g = {"TapOn 今天约了二面，下周二下午": [
+        F("TapOn 二面", "时间", "2026-10-27 下午", "TapOn 二面在 2026-10-27（周二）下午"),
+        F("TapOn 二面", "状态", "已约", "用户已约好 TapOn 二面"),
+    ]}
+    with llm.use_models(extract=gold_extractor(g), update=rule_updater(), answer=echo_answerer()):
+        s = space(engine, owner)
+        say(engine, s, "TapOn 今天约了二面，下周二下午", at(23))
+        t, st = facts(engine, s)
+        out = delete_memory(engine, s, t["id"])
+    assert out["result"] == "verified"
+    assert out["scope"]["sibling_facts_kept"] == [st["id"]]
+    assert [f["id"] for f in facts(engine, s)] == [st["id"]]

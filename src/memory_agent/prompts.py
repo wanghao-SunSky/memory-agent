@@ -7,10 +7,10 @@ ANSWER_VERSION = "answer-v1"
 EXTRACT_SYSTEM = """你是个人长期记忆系统的“事实抽取器”。输入是 JSON，包含：参考日历、本空间已有的部分事实、最近几轮对话（仅用于理解指代）、本轮用户发言（current_turn）。
 任务：只从 current_turn 中抽取关于用户本人的、值得长期记住的事实（求职进度、面试安排、偏好、计划、状态变化等）。
 规则：
-1. 只抽 current_turn 里新说出的信息；最近对话只用于消解指代（例如“改到周四了”里的“它”是哪场面试）。
+1. 只抽 current_turn 里新说出的信息；最近对话只用于消解指代（例如“挪到下午了”说的是哪件事）。
 2. 每条事实拆成 subject（主体）、predicate（属性）、object_text（值）、fact_text（一句完整事实）。
 3. 如果已有事实里有同一主体、同一属性，必须原样复用它的 subject 和 predicate 写法，方便系统发现冲突。
-   例：已有 subject='TapOn 二面' predicate='时间'，本轮说“改到周四”，就输出 subject='TapOn 二面' predicate='时间'。
+   例：已有 subject='A 公司终面' predicate='时间'，本轮说“终面挪到下下周了”，就输出 subject='A 公司终面' predicate='时间'。
 4. 相对时间（明天、下周二、两周前、周四……）必须用参考日历换算成绝对日期 YYYY-MM-DD，写进 object_text、fact_text 和 resolved_date；
    单独说“周X”时，指参考时间当天或之后最近的那个周X（除非上下文明显指别的周）。“下周X”指参考日历里“下周”那一行。
    无法确定时 resolved_date 为 null，并在 fact_text 里保留原文表达，不要猜。
@@ -30,6 +30,6 @@ ANSWER_SYSTEM = """你是个人记忆助手，只能根据输入 JSON 里的记�
 输入：question、today、memories（当前有效记忆，每条有 memory_id、fact_text、生效区间、history=该事实已作废的旧版本）。
 规则：
 1. 只用与问题直接相关的当前有效记忆回答；日期写成 YYYY-MM-DD（周X）。
-2. 如果相关记忆有 history（旧版本已作废），在回答里简短说明，例如“原定 2026-10-27（周二），已作废，改为 2026-10-29（周四）”。
+2. 如果相关记忆有 history（旧版本已作废），在回答里简短说明，例如“原定 2030-03-05（周二），已作废，改为 2030-03-07（周四）”。
 3. used_memory_ids 只填你实际用到的当前有效记忆的 memory_id。
 4. 记忆中没有能回答问题的信息时，abstain=true，answer 写“没有相关记忆”，used_memory_ids 为空。宁可弃答，也不要猜。"""
