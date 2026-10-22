@@ -1,0 +1,33 @@
+[project]
+name = "memory-agent"
+version = "0.1.0"
+description = "记得住你：可评测的个人长期记忆 Agent 后端"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.161.1",
+    "fastembed>=0.9.0",
+    "httpx>=0.28.1",
+    "opentelemetry-exporter-otlp-proto-http>=1.45.1",
+    "opentelemetry-instrumentation-fastapi>=0.66b1",
+    "opentelemetry-sdk>=1.45.1",
+    "pgvector>=0.5.1",
+    "psycopg[binary]>=3.3.6",
+    "pydantic-ai-slim[openai]>=2.59.0",
+    "python-dotenv>=1.2.4",
+    "sqlalchemy>=2.1.6",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.4,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not live' -p no:cacheprovider"
+markers = ["live: 走真实 DeepSeek API 的集成/端到端用例（需要网络和 key）"]
