@@ -1,5 +1,7 @@
 # 记得住你 · memory-agent（第 1 周：最小可演示版）
 
+> 本机 macOS 学习环境已于 2026-10-26 初始化。使用 `scripts/local.sh start` 启动、`scripts/local.sh test -q` 测试，详见 [本机运行说明](docs/local-setup.md)。下文 `/home/box`、apt 和 `scripts/start.sh` 描述的是原 Linux 环境。
+
 这是一个可评测的个人长期记忆 Agent 后端。它从对话里抽取事实，并按双时间轴（事件时间 valid_from/valid_to、记录时间 recorded_at/expired_at）做改期、作废和版本链。按空间（工作/生活）检索，记忆不够时会弃答，用户可以看到并删除记忆，删除后会自动验证。设计文档见 `/workspace/jobs/记得住你-详细设计-2026-10-23.md` 第 10 部分「第 1 周」。
 
 ## 目录
