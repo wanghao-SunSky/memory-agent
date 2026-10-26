@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# macOS 学习环境：独立数据库、启动和测试。安装说明见 docs/local-setup.md。
+# macOS 学习环境：独立数据库、启动和测试。运行说明见 README.md。
 set -euo pipefail
 cd "$(dirname "$0")/.."
 ROOT="$PWD"

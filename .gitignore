@@ -9,3 +9,8 @@ __pycache__/
 /tmp/
 reports/*.log
 .local/
+
+# 本地学习材料和过程记录不进入项目仓库
+/docs/learning/
+/docs/progress.md
+/docs/Agent知识与项目结合方案-*.md
