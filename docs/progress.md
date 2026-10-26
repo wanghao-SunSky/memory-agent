@@ -116,3 +116,16 @@ flowchart TD
  A[初版内容检查 已完成] --> B[GitHub 推送 正在做]
  B --> C[远程核验 未开始]
 ```
+
+
+## 2026-10-27 — GitHub 初版发布完成
+
+私有仓库 https://github.com/wanghao-SunSky/memory-agent 已创建，初版提交 49ac9a3 已推送 main；既有三个提交完整保留。GitHub 已确认私有设置和默认分支 main，本地跟踪 origin/main 且无未提交文件。
+
+采用私有仓库保存当前学习基线，未改变业务逻辑，也未重跑测试；验证范围仍为昨日离线 58/58，真实模型测试尚未运行。本条发布记录随随后文档提交同步，接下来可从该基线继续第一课。
+
+```mermaid
+flowchart TD
+ A[初版内容检查 已完成] --> B[GitHub 推送 已完成]
+ B --> C[远程核验 已完成]
+```
