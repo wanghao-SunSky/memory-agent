@@ -7,7 +7,8 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-os.environ.setdefault("DATABASE_URL", "postgresql+psycopg://memory:memory@localhost:5432/memory_test")
+os.environ.setdefault("DATABASE_URL", "postgresql+psycopg://localhost/memory_test")
+os.environ.setdefault("MEMORY_AUTH_MODE", "test")
 os.environ.setdefault("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT", "")  # 测试默认不导出；live 组可自行打开
 os.environ["JOB_BACKOFF_BASE"] = "0"  # 测试里退避立即到期
 
@@ -25,7 +26,8 @@ TABLES = "spaces, episodes, facts, retrieval_keys, memory_ops, jobs, deletion_lo
 
 @pytest.fixture(scope="session", autouse=True)
 def _db():
-    assert "memory_test" in os.environ["DATABASE_URL"], "测试只能跑在 memory_test 库"
+    from sqlalchemy.engine import make_url
+    assert make_url(os.environ["DATABASE_URL"]).database in {"memory_test", "memory_test_learning"}, "测试只能跑在独立 memory_test 或 memory_test_learning 库"
     migrate()
     with get_engine().begin() as c:
         c.execute(text(f"TRUNCATE {TABLES} RESTART IDENTITY CASCADE"))
@@ -51,7 +53,7 @@ def owner():
 
 @pytest.fixture(scope="session")
 def client():
-    return TestClient(create_app(instrument=False))
+    return TestClient(create_app(instrument=False, allow_test_auth=True))
 
 
 def at(day: int, hour: int = 10, month: int = 10) -> datetime:
@@ -97,3 +99,11 @@ def pytest_terminal_summary(terminalreporter):
     out.mkdir(exist_ok=True)
     tag = "live" if any(k.startswith("live") for k in summary) else "offline"
     (out / f"last_{tag}.json").write_text(json.dumps({"run_at": datetime.now(TZ).isoformat(), "groups": summary}, ensure_ascii=False, indent=2))
+
+
+@pytest.fixture(autouse=True)
+def _model_network_boundary(request, monkeypatch):
+    import pydantic_ai.models
+    live = request.node.get_closest_marker("live") is not None
+    monkeypatch.setattr(pydantic_ai.models, "ALLOW_MODEL_REQUESTS", live)
+    monkeypatch.setenv("MEMORY_MODEL_MODE", "live" if live else "demo")

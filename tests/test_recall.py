@@ -60,6 +60,38 @@ def test_used_ids_are_validated(engine, owner):
     with llm.use_models(answer=bad), engine.begin() as c:
         r = recall(c, s, "TapOn 二面什么时候？")
     assert r["used_memory_ids"] == []
+    assert r["abstain"] is True
+    assert r["answer"] != "x"
+
+
+@pytest.mark.parametrize("refs,abstain", [([], False), ([424242], False), ([424242], True)])
+def test_no_evidence_never_leaks_model_answer(engine, owner, refs, abstain):
+    s = space(engine, owner)
+    with llm.use_models(extract=gold_extractor(G), update=rule_updater()):
+        say(engine, s, "TapOn 二面下周二下午", at(23))
+    bad = FunctionModel(lambda m, info: _call(info, {"answer": "没有依据的确定结论", "used_memory_ids": refs, "abstain": abstain}))
+    with llm.use_models(answer=bad), engine.begin() as c:
+        r = recall(c, s, "TapOn 二面什么时候？")
+    assert r["abstain"] is True
+    assert r["used_memory_ids"] == []
+    assert "确定结论" not in r["answer"]
+
+
+@pytest.mark.parametrize("abstain", [False, True])
+def test_mixed_valid_ids_and_explicit_abstention(engine, owner, abstain):
+    from tests.helpers import facts
+
+    s = space(engine, owner)
+    with llm.use_models(extract=gold_extractor(G), update=rule_updater()):
+        say(engine, s, "TapOn 二面下周二下午", at(23))
+    mid = facts(engine, s)[0]["id"]
+    answer = "TapOn 二面在 2026-10-27 下午"
+    fake = FunctionModel(lambda m, info: _call(info, {"answer": answer, "used_memory_ids": [mid, 424242, mid], "abstain": abstain}))
+    with llm.use_models(answer=fake), engine.begin() as c:
+        r = recall(c, s, "TapOn 二面什么时候？")
+    assert r["abstain"] is abstain
+    assert r["used_memory_ids"] == ([] if abstain else [mid])
+    assert (r["answer"] == answer) is (not abstain)
 
 
 def test_api_recall(client, engine, owner, models):
@@ -67,3 +99,12 @@ def test_api_recall(client, engine, owner, models):
     say(engine, s, "TapOn 二面下周二下午", at(23))
     r = client.post("/recall", json={"space": "work", "question": "TapOn 二面什么时候"}, headers={"X-Owner-Id": owner}).json()
     assert set(r) >= {"answer", "used_memory_ids", "abstain", "memories", "latency_ms"}
+
+
+def test_blank_answer_is_not_a_successful_response():
+    from memory_agent.recall import enforce_evidence
+    from memory_agent.schemas import RecallAnswer
+
+    result = enforce_evidence(RecallAnswer(answer="  ", used_memory_ids=[12], abstain=False), {12})
+    assert result.abstain and result.used_memory_ids == []
+    assert result.answer.strip()

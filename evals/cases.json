@@ -1,0 +1,110 @@
+[
+  {
+    "id": "E01",
+    "purpose": "new_fact",
+    "turns": [
+      {
+        "content": "云杉实验室终面安排在2026-11-09上午",
+        "at": "2026-10-23T10:00:00+08:00"
+      }
+    ],
+    "question": "云杉实验室终面是哪天？",
+    "contains": "2026-11-09",
+    "abstain": false
+  },
+  {
+    "id": "E02",
+    "purpose": "update",
+    "turns": [
+      {
+        "content": "晨星项目评审安排在2026-11-10下午",
+        "at": "2026-10-23T10:00:00+08:00"
+      },
+      {
+        "content": "晨星项目评审改到2026-11-12下午",
+        "at": "2026-10-24T10:00:00+08:00"
+      }
+    ],
+    "question": "晨星项目评审现在在哪天？",
+    "contains": "2026-11-12",
+    "abstain": false
+  },
+  {
+    "id": "E03",
+    "purpose": "historical",
+    "turns": [
+      {
+        "content": "白鹭科技二面安排在2026-11-11下午",
+        "at": "2026-10-23T10:00:00+08:00"
+      },
+      {
+        "content": "白鹭科技二面改到2026-11-13下午",
+        "at": "2026-10-24T10:00:00+08:00"
+      }
+    ],
+    "question": "白鹭科技二面是哪天？",
+    "as_of": "2026-10-23T12:00:00+08:00",
+    "contains": "2026-11-11",
+    "forbidden": "2026-11-13",
+    "abstain": false
+  },
+  {
+    "id": "E04",
+    "purpose": "empty_abstention",
+    "turns": [],
+    "question": "我的护照什么时候到期？",
+    "abstain": true
+  },
+  {
+    "id": "E05",
+    "purpose": "no_reason_inference",
+    "turns": [
+      {
+        "content": "松林公司二面安排在2026-11-14上午",
+        "at": "2026-10-23T10:00:00+08:00"
+      }
+    ],
+    "question": "为什么松林公司把我的面试改期了？",
+    "abstain": true
+  },
+  {
+    "id": "E06",
+    "purpose": "space_isolation",
+    "turns": [
+      {
+        "content": "青禾公司终面安排在2026-11-15上午",
+        "at": "2026-10-23T10:00:00+08:00",
+        "space": "work"
+      }
+    ],
+    "space": "life",
+    "question": "青禾公司终面是哪天？",
+    "abstain": true
+  },
+  {
+    "id": "E07",
+    "purpose": "delete_then_recall",
+    "turns": [
+      {
+        "content": "远帆公司二面安排在2026-11-16下午",
+        "at": "2026-10-23T10:00:00+08:00"
+      }
+    ],
+    "delete": true,
+    "question": "远帆公司二面是哪天？",
+    "abstain": true
+  },
+  {
+    "id": "E08",
+    "purpose": "before_fact",
+    "turns": [
+      {
+        "content": "夏雨公司二面安排在2026-11-17下午",
+        "at": "2026-10-24T10:00:00+08:00"
+      }
+    ],
+    "as_of": "2026-10-23T12:00:00+08:00",
+    "question": "夏雨公司二面是哪天？",
+    "abstain": true
+  }
+]

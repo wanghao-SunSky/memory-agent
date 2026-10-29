@@ -1,0 +1,659 @@
+{
+  "run_at": "2026-10-29T13:03:44.679620+00:00",
+  "mode": "live",
+  "model": "deepseek-chat",
+  "repeats": 1,
+  "dataset": "evals/cases.json",
+  "limits": "8 synthetic cases; literal checks, not general model accuracy. Demo is rules, not an LLM. Query timings exclude writes. No dollar cost estimate without provider billing rates.",
+  "summary": {
+    "recall": {
+      "passed": 8,
+      "total": 8,
+      "query_median_ms": 453.0
+    },
+    "investigate": {
+      "passed": 8,
+      "total": 8,
+      "query_median_ms": 4028.1
+    }
+  },
+  "results": [
+    {
+      "case": "E01",
+      "purpose": "new_fact",
+      "route": "recall",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "expected_content": true,
+        "finished": true
+      },
+      "answer": "云杉实验室终面安排在 2026-11-09（周一）上午。",
+      "abstain": false,
+      "used_memory_ids": [
+        82
+      ],
+      "query_usage": {
+        "input_tokens": 636,
+        "output_tokens": 87
+      },
+      "write_usage": {
+        "input_tokens": 1637,
+        "output_tokens": 130
+      },
+      "latency_ms": {
+        "retrieval": 2.7,
+        "total": 1079.9
+      },
+      "steps": [],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 2743.0
+    },
+    {
+      "case": "E01",
+      "purpose": "new_fact",
+      "route": "investigate",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "expected_content": true,
+        "finished": true
+      },
+      "answer": "云杉实验室终面安排在 2026-11-09 上午（该信息自 2026-10-23 起记录，暂无后续变更记录）。",
+      "abstain": false,
+      "used_memory_ids": [
+        83
+      ],
+      "query_usage": {
+        "input_tokens": 3522,
+        "output_tokens": 216,
+        "requests": 4
+      },
+      "write_usage": {
+        "input_tokens": 1637,
+        "output_tokens": 130
+      },
+      "latency_ms": {
+        "retrieval": 24.1,
+        "total": 4456.2
+      },
+      "steps": [
+        {
+          "tool": "search_memories",
+          "count": 1,
+          "status": "ok"
+        },
+        {
+          "tool": "get_memory_history",
+          "memory_id": 83,
+          "count": 0,
+          "status": "ok"
+        },
+        {
+          "tool": "get_source_evidence",
+          "memory_id": 83,
+          "count": 1,
+          "status": "ok"
+        }
+      ],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 5556.0
+    },
+    {
+      "case": "E02",
+      "purpose": "update",
+      "route": "recall",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "expected_content": true,
+        "finished": true
+      },
+      "answer": "晨星项目评审现在定在 2026-11-12（周四）下午。原定 2026-11-10（周二）下午，已作废。",
+      "abstain": false,
+      "used_memory_ids": [
+        85
+      ],
+      "query_usage": {
+        "input_tokens": 690,
+        "output_tokens": 106
+      },
+      "write_usage": {
+        "input_tokens": 4104,
+        "output_tokens": 359
+      },
+      "latency_ms": {
+        "retrieval": 5.4,
+        "total": 895.4
+      },
+      "steps": [],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 5403.2
+    },
+    {
+      "case": "E02",
+      "purpose": "update",
+      "route": "investigate",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "expected_content": true,
+        "finished": true
+      },
+      "answer": "晨星项目评审现在定在 2026-11-12 下午。此前曾安排在 2026-11-10 下午，2026-10-24 起改为 11-12 下午（原安排已失效）。",
+      "abstain": false,
+      "used_memory_ids": [
+        87
+      ],
+      "query_usage": {
+        "input_tokens": 3629,
+        "output_tokens": 229,
+        "requests": 4
+      },
+      "write_usage": {
+        "input_tokens": 4111,
+        "output_tokens": 366
+      },
+      "latency_ms": {
+        "retrieval": 13.8,
+        "total": 4155.6
+      },
+      "steps": [
+        {
+          "tool": "search_memories",
+          "count": 1,
+          "status": "ok"
+        },
+        {
+          "tool": "get_memory_history",
+          "memory_id": 87,
+          "count": 1,
+          "status": "ok"
+        },
+        {
+          "tool": "get_source_evidence",
+          "memory_id": 87,
+          "count": 1,
+          "status": "ok"
+        }
+      ],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 8420.5
+    },
+    {
+      "case": "E03",
+      "purpose": "historical",
+      "route": "recall",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "expected_content": true,
+        "no_future_content": true,
+        "finished": true
+      },
+      "answer": "白鹭科技二面安排在 2026-11-11（周三）下午。",
+      "abstain": false,
+      "used_memory_ids": [
+        88
+      ],
+      "query_usage": {
+        "input_tokens": 638,
+        "output_tokens": 87
+      },
+      "write_usage": {
+        "input_tokens": 4113,
+        "output_tokens": 371
+      },
+      "latency_ms": {
+        "retrieval": 7.2,
+        "total": 1190.5
+      },
+      "steps": [],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 6420.1
+    },
+    {
+      "case": "E03",
+      "purpose": "historical",
+      "route": "investigate",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "expected_content": true,
+        "no_future_content": true,
+        "finished": true
+      },
+      "answer": "白鹭科技二面安排在 2026-11-11 下午（该信息记录于 2026-10-23）。",
+      "abstain": false,
+      "used_memory_ids": [
+        90
+      ],
+      "query_usage": {
+        "input_tokens": 2612,
+        "output_tokens": 174,
+        "requests": 3
+      },
+      "write_usage": {
+        "input_tokens": 4113,
+        "output_tokens": 371
+      },
+      "latency_ms": {
+        "retrieval": 12.7,
+        "total": 3783.1
+      },
+      "steps": [
+        {
+          "tool": "search_memories",
+          "count": 1,
+          "status": "ok"
+        },
+        {
+          "tool": "get_source_evidence",
+          "memory_id": 90,
+          "count": 1,
+          "status": "ok"
+        }
+      ],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 7677.4
+    },
+    {
+      "case": "E04",
+      "purpose": "empty_abstention",
+      "route": "recall",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "finished": true
+      },
+      "answer": "没有相关记忆",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "write_usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "latency_ms": {
+        "retrieval": 10.6,
+        "total": 10.6
+      },
+      "steps": [],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 13.8
+    },
+    {
+      "case": "E04",
+      "purpose": "empty_abstention",
+      "route": "investigate",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "finished": true
+      },
+      "answer": "没有足够的有效记忆依据，暂时无法回答",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 2399,
+        "output_tokens": 172,
+        "requests": 3
+      },
+      "write_usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "latency_ms": {
+        "retrieval": 24.2,
+        "total": 3084.6
+      },
+      "steps": [
+        {
+          "tool": "search_memories",
+          "count": 0,
+          "status": "ok"
+        },
+        {
+          "tool": "search_memories",
+          "count": 0,
+          "status": "ok"
+        }
+      ],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 3085.9
+    },
+    {
+      "case": "E05",
+      "purpose": "no_reason_inference",
+      "route": "recall",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "finished": true
+      },
+      "answer": "没有足够的有效记忆依据，暂时无法回答",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 636,
+        "output_tokens": 71
+      },
+      "write_usage": {
+        "input_tokens": 1637,
+        "output_tokens": 128
+      },
+      "latency_ms": {
+        "retrieval": 3.6,
+        "total": 1106.5
+      },
+      "steps": [],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 2193.6
+    },
+    {
+      "case": "E05",
+      "purpose": "no_reason_inference",
+      "route": "investigate",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "finished": true
+      },
+      "answer": "没有足够的有效记忆依据，暂时无法回答",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 2579,
+        "output_tokens": 203,
+        "requests": 3
+      },
+      "write_usage": {
+        "input_tokens": 1637,
+        "output_tokens": 130
+      },
+      "latency_ms": {
+        "retrieval": 20.3,
+        "total": 4838.2
+      },
+      "steps": [
+        {
+          "tool": "search_memories",
+          "count": 1,
+          "status": "ok"
+        },
+        {
+          "tool": "search_memories",
+          "count": 1,
+          "status": "ok"
+        }
+      ],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 6392.8
+    },
+    {
+      "case": "E06",
+      "purpose": "space_isolation",
+      "route": "recall",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "finished": true
+      },
+      "answer": "没有相关记忆",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "write_usage": {
+        "input_tokens": 1637,
+        "output_tokens": 130
+      },
+      "latency_ms": {
+        "retrieval": 2.5,
+        "total": 2.6
+      },
+      "steps": [],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 1721.2
+    },
+    {
+      "case": "E06",
+      "purpose": "space_isolation",
+      "route": "investigate",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "finished": true
+      },
+      "answer": "没有足够的有效记忆依据，暂时无法回答",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 3336,
+        "output_tokens": 210,
+        "requests": 4
+      },
+      "write_usage": {
+        "input_tokens": 1637,
+        "output_tokens": 130
+      },
+      "latency_ms": {
+        "retrieval": 27.8,
+        "total": 4143.7
+      },
+      "steps": [
+        {
+          "tool": "search_memories",
+          "count": 0,
+          "status": "ok"
+        },
+        {
+          "tool": "search_memories",
+          "count": 0,
+          "status": "ok"
+        },
+        {
+          "tool": "search_memories",
+          "count": 0,
+          "status": "ok"
+        }
+      ],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 5481.3
+    },
+    {
+      "case": "E07",
+      "purpose": "delete_then_recall",
+      "route": "recall",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "finished": true
+      },
+      "answer": "没有相关记忆",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "write_usage": {
+        "input_tokens": 1637,
+        "output_tokens": 130
+      },
+      "latency_ms": {
+        "retrieval": 2.7,
+        "total": 2.8
+      },
+      "steps": [],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 1802.5
+    },
+    {
+      "case": "E07",
+      "purpose": "delete_then_recall",
+      "route": "investigate",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "finished": true
+      },
+      "answer": "没有足够的有效记忆依据，暂时无法回答",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 2424,
+        "output_tokens": 175,
+        "requests": 3
+      },
+      "write_usage": {
+        "input_tokens": 1637,
+        "output_tokens": 130
+      },
+      "latency_ms": {
+        "retrieval": 27.0,
+        "total": 3337.0
+      },
+      "steps": [
+        {
+          "tool": "search_memories",
+          "count": 0,
+          "status": "ok"
+        },
+        {
+          "tool": "search_memories",
+          "count": 0,
+          "status": "ok"
+        }
+      ],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 4572.2
+    },
+    {
+      "case": "E08",
+      "purpose": "before_fact",
+      "route": "recall",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "finished": true
+      },
+      "answer": "没有相关记忆",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "write_usage": {
+        "input_tokens": 1637,
+        "output_tokens": 130
+      },
+      "latency_ms": {
+        "retrieval": 4.1,
+        "total": 4.2
+      },
+      "steps": [],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 1248.6
+    },
+    {
+      "case": "E08",
+      "purpose": "before_fact",
+      "route": "investigate",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "finished": true
+      },
+      "answer": "没有足够的有效记忆依据，暂时无法回答",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 3405,
+        "output_tokens": 212,
+        "requests": 4
+      },
+      "write_usage": {
+        "input_tokens": 1637,
+        "output_tokens": 130
+      },
+      "latency_ms": {
+        "retrieval": 37.4,
+        "total": 3912.5
+      },
+      "steps": [
+        {
+          "tool": "search_memories",
+          "count": 0,
+          "status": "ok"
+        },
+        {
+          "tool": "search_memories",
+          "count": 0,
+          "status": "ok"
+        },
+        {
+          "tool": "search_memories",
+          "count": 0,
+          "status": "ok"
+        }
+      ],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 4917.6
+    }
+  ]
+}

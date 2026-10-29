@@ -1,6 +1,11 @@
+from pathlib import Path
+import shutil
+import subprocess
+
 import pytest
 
 from memory_agent import llm
+from memory_agent.ui import PAGE
 from tests.conftest import at
 from tests.fakes import echo_answerer, gold_extractor, rule_updater
 from tests.helpers import F, say, space
@@ -19,5 +24,22 @@ def test_memories_list_and_page(client, engine, owner):
     m = client.get("/memories?space=work", headers={"X-Owner-Id": owner}).json()["memories"]
     assert len(m) == 1 and [v["status"] for v in m[0]["versions"]] == ["superseded", "active"]
     assert m[0]["versions"][0]["valid_to"] is not None and m[0]["current"]["sources"]
-    page = client.get(f"/?space=work&owner={owner}").text
-    assert "你记得我什么" in page and "已作废" in page and "删除" in page and "2026-10-29" in page
+    page = client.get("/").text
+    assert "你记得我什么" in page and "保存记忆" in page and "追查依据" in page
+    assert "writeForm" in page and "questionForm" in page and "authForm" in page
+    assert "2026-10-29" not in page  # 私有记忆由已认证 API 动态加载，不嵌入匿名 HTML
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="UI async behavior checks need Node.js; no frontend packages required")
+@pytest.mark.parametrize("scenario", [
+    "connect_success", "connect_failure", "write_success", "write_failure",
+    "delete_before_response", "delete_during_reload", "delete_failure",
+    "retry_success", "retry_failure", "poll_after_switch", "poll_failure", "question_finally",
+])
+def test_ui_discards_async_responses_after_identity_or_space_switch(scenario):
+    script = PAGE.split("<script>", 1)[1].split("</script>", 1)[0]
+    result = subprocess.run(
+        [shutil.which("node"), str(Path(__file__).with_name("ui_generation.cjs")), scenario],
+        input=script, text=True, capture_output=True, timeout=10,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr

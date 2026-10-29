@@ -1,0 +1,52 @@
+name: memory-agent
+x-app: &app
+  build: .
+  image: memory-agent:local
+  env_file:
+    - path: .env.example
+    - path: .env.local
+      required: false
+  environment:
+    DATABASE_URL: postgresql+psycopg://memory_app:memory-container-local@db:5432/memory
+    MEMORY_AUTH_MODE: token
+    MEMORY_API_TOKENS: ${MEMORY_API_TOKENS:?Use scripts/docker.sh start to generate a token}
+    FASTEMBED_CACHE_PATH: /models
+  volumes:
+    - models:/models
+  restart: unless-stopped
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_PASSWORD: memory-container-admin-local
+    volumes:
+      - database:/var/lib/postgresql/data
+      - ./scripts/container_init.sql:/docker-entrypoint-initdb.d/01-memory.sql:ro
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U postgres -d postgres"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+  api:
+    <<: *app
+    ports:
+      - 127.0.0.1:8000:8000
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      # Liveness gates the worker; /readyz additionally requires the worker.
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/livez', timeout=2)"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+  worker:
+    <<: *app
+    command: [worker]
+    depends_on:
+      api:
+        condition: service_healthy
+volumes:
+  database:
+  models:

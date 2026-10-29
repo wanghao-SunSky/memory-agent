@@ -6,7 +6,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-SECRETS_FILE = Path(os.environ.get("MEMORY_SECRETS_FILE", "/home/box/.secrets/deepseek.env"))
+SECRETS_FILE = Path(os.environ.get("MEMORY_SECRETS_FILE", ".env.local"))
 
 
 def load_secrets() -> None:
@@ -15,7 +15,7 @@ def load_secrets() -> None:
 
 
 def database_url() -> str:
-    return os.environ.get("DATABASE_URL", "postgresql+psycopg://memory:memory@localhost:5432/memory")
+    return os.environ.get("DATABASE_URL", "postgresql+psycopg://localhost/memory")
 
 
 def otlp_endpoint() -> str | None:
@@ -26,6 +26,16 @@ def otlp_endpoint() -> str | None:
 
 def jaeger_ui() -> str:
     return os.environ.get("JAEGER_UI", "http://localhost:16686")
+
+
+load_secrets()
+
+
+def model_mode() -> str:
+    mode = os.environ.get("MEMORY_MODEL_MODE", "demo")
+    if mode not in {"demo", "live"}:
+        raise ValueError("MEMORY_MODEL_MODE must be demo or live")
+    return mode
 
 
 DEEPSEEK_BASE_URL = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com")

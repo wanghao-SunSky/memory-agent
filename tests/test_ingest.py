@@ -52,4 +52,4 @@ def test_api_post_episode(client, owner):
     assert r.status_code == 200 and r.json()["job_id"]
     r2 = client.post("/episodes", json={"space": "work", "content": "接口写入", "occurred_at": "2026-10-23T10:00:00+08:00"}, headers={"X-Owner-Id": owner})
     assert r2.json()["duplicate"] is True
-    assert client.get(f"/jobs/{r.json()['job_id']}").json()["status"] == "queued"
+    assert client.get(f"/jobs/{r.json()['job_id']}", headers={"X-Owner-Id": owner}).json()["status"] == "queued"

@@ -49,7 +49,7 @@ def run_case(engine, case: Case) -> dict:
             deletions.append(delete_memory(engine, spaces[case.delete_space], mid))
         assert deletions, f"没有找到含“{case.delete_keyword}”的记忆可删"
     with engine.begin() as c:
-        r = recall(c, spaces[case.q_space], case.question, as_of=_t(case.q_day, 9))
+        r = recall(c, spaces[case.q_space], case.question, as_of=_t(case.q_day, 17))
     return {"owner": owner, "spaces": spaces, "recall": r, "deletions": deletions}
 
 

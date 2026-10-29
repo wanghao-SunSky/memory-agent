@@ -243,6 +243,13 @@ def process_extract_job(engine: Engine, job: dict) -> dict:
         span.set_attribute("memory.episode_id", episode_id)
         try:
             with engine.begin() as conn:
+                # 锁定正在执行的作业：租约过期时其他 worker 会 SKIP LOCKED；
+                # 重新领取过的旧执行者不得提交结果或覆盖新尝试。
+                active = conn.execute(text("SELECT status, attempts, locked_by FROM jobs WHERE id=:i FOR UPDATE"),
+                                      {"i": job["id"]}).mappings().first()
+                if (active is None or active["status"] != "running" or active["attempts"] != job["attempts"]
+                        or active["locked_by"] != job.get("locked_by")):
+                    return {"skipped": "job lease no longer owned"}
                 ep = conn.execute(
                     text("SELECT id, space_id, session_id, role, trust, content, occurred_at, excluded FROM episodes WHERE id=:i FOR SHARE"),
                     {"i": episode_id},

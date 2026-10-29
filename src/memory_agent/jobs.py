@@ -16,7 +16,7 @@ BACKOFF_CAP = 300.0
 WORKER_ID = f"{socket.gethostname()}:{os.getpid()}"
 
 
-def claim(engine: Engine, worker_id: str = WORKER_ID, kinds: tuple[str, ...] = ("extract",)) -> dict | None:
+def claim(engine: Engine, worker_id: str = WORKER_ID, kinds: tuple[str, ...] = ("extract",), *, job_id: int | None = None) -> dict | None:
     """领取一条可运行作业（排队中且到期，或租约过期的 running）。领取本身单独提交。"""
     with engine.begin() as conn:
         row = conn.execute(
@@ -24,14 +24,14 @@ def claim(engine: Engine, worker_id: str = WORKER_ID, kinds: tuple[str, ...] = (
                            locked_until=now() + make_interval(secs => :lease), updated_at=now()
                     WHERE id = (
                         SELECT id FROM jobs
-                        WHERE kind = ANY(:kinds) AND (
+                        WHERE kind = ANY(:kinds) AND (CAST(:job_id AS bigint) IS NULL OR id=:job_id) AND (
                               (status='queued' AND run_after <= now())
                            OR (status='running' AND locked_until < now()))
                         ORDER BY run_after, id
                         FOR UPDATE SKIP LOCKED
                         LIMIT 1)
-                    RETURNING id, kind, payload, attempts, max_attempts, idempotency_key"""),
-            {"w": worker_id, "lease": LEASE_SECONDS, "kinds": list(kinds)},
+                    RETURNING id, kind, payload, attempts, max_attempts, idempotency_key, locked_by"""),
+            {"w": worker_id, "lease": LEASE_SECONDS, "kinds": list(kinds), "job_id": job_id},
         ).mappings().first()
         return dict(row) if row else None
 
@@ -50,20 +50,41 @@ def mark_failed(engine: Engine, job: dict, err: BaseException, trace_id: str | N
     delay = min(BACKOFF_CAP, BACKOFF_BASE * (2 ** (attempts - 1)))
     status = "dead" if attempts >= max_attempts else "queued"
     with engine.begin() as conn:
-        conn.execute(
+        changed = conn.execute(
             text("""UPDATE jobs SET status=:st, last_error=:e, run_after=now() + make_interval(secs => :d),
                            locked_by=NULL, locked_until=NULL, updated_at=now(), trace_id=:t,
                            finished_at = CASE WHEN :st='dead' THEN now() ELSE NULL END
-                    WHERE id=:id"""),
-            {"st": status, "e": msg, "d": delay, "id": job["id"], "t": trace_id},
-        )
-    return status
+                    WHERE id=:id AND status='running' AND attempts=:attempts AND locked_by=:worker"""),
+            {"st": status, "e": msg, "d": delay, "id": job["id"], "t": trace_id,
+             "attempts": attempts, "worker": job["locked_by"]},
+        ).rowcount
+    return status if changed else "stale"
 
 
 def requeue_dead(conn: Connection, job_id: int) -> None:
     conn.execute(text("UPDATE jobs SET status='queued', attempts=0, run_after=now(), finished_at=NULL WHERE id=:i AND status='dead'"), {"i": job_id})
 
 
-def get_job(conn: Connection, job_id: int) -> dict | None:
-    r = conn.execute(text("SELECT id, kind, status, attempts, max_attempts, run_after, last_error, trace_id, result FROM jobs WHERE id=:i"), {"i": job_id}).mappings().first()
+def get_job(conn: Connection, job_id: int, owner_id: str | None = None) -> dict | None:
+    q = """SELECT j.id, j.kind, j.status, j.attempts, j.max_attempts, j.run_after,
+                  j.last_error, j.trace_id, j.result FROM jobs j"""
+    if owner_id is not None:
+        q += """ JOIN episodes e ON e.id=(j.payload->>'episode_id')::bigint
+                 JOIN spaces s ON s.id=e.space_id
+                 WHERE j.id=:i AND s.owner_id=:o"""
+    else:
+        q += " WHERE j.id=:i"
+    r = conn.execute(text(q), {"i": job_id, "o": owner_id}).mappings().first()
     return dict(r) if r else None
+
+
+def heartbeat(engine: Engine, worker_id: str = WORKER_ID) -> None:
+    with engine.begin() as conn:
+        conn.execute(text("""INSERT INTO worker_heartbeats(worker_id, model_mode, seen_at)
+                            VALUES (:w,:m,now()) ON CONFLICT(worker_id) DO UPDATE
+                            SET model_mode=EXCLUDED.model_mode, seen_at=now()"""),
+                     {"w": worker_id, "m": os.environ.get("MEMORY_MODEL_MODE", "demo")})
+        conn.execute(text("""UPDATE jobs SET locked_until=now()+make_interval(secs=>:lease)
+                            WHERE id IN (SELECT id FROM jobs WHERE status='running'
+                              AND locked_by=:w AND locked_until>now() FOR UPDATE SKIP LOCKED)"""),
+                     {"lease": LEASE_SECONDS, "w": worker_id})

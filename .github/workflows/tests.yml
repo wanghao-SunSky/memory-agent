@@ -1,0 +1,83 @@
+name: Tests
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: memory
+          POSTGRES_PASSWORD: memory-ci-only
+          POSTGRES_DB: memory_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U memory -d memory_test"
+          --health-interval 3s
+          --health-timeout 3s
+          --health-retries 30
+    env:
+      DATABASE_URL: postgresql+psycopg://memory:{{PASSWORD_6ucwyprb}}@127.0.0.1:5432/memory_test
+      MEMORY_MODEL_MODE: demo
+      MEMORY_AUTH_MODE: test
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: ''
+      FASTEMBED_CACHE_PATH: ${{ github.workspace }}/.local/models
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.11.7'
+          python-version: '3.12'
+          enable-cache: true
+      - uses: actions/cache@v4
+        with:
+          path: .local/models
+          key: bge-small-zh-v1.5-linux-v1
+      - run: uv sync --locked
+      - name: Enable vector before SQLAlchemy connection hooks
+        run: uv run python -c "import psycopg; c=psycopg.connect('postgresql://memory:{{PASSWORD_6ucwyprb}}@127.0.0.1:5432/memory_test', autocommit=True); c.execute('CREATE EXTENSION IF NOT EXISTS vector'); c.close()"
+      - run: uv run pytest -q
+      - run: uv run python scripts/evaluate.py --mode demo
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: offline-test-report
+          path: |
+            reports/last_offline.json
+            reports/evaluation-demo.json
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate isolated demo token
+        run: |
+          TOKEN="$(openssl rand -hex 32)"
+          echo "::add-mask::$TOKEN"
+          echo "MEMORY_SMOKE_TOKEN=$TOKEN" >> "$GITHUB_ENV"
+          printf 'MEMORY_API_TOKENS={"%s":"ci-smoke"}\n' "$TOKEN" >> "$GITHUB_ENV"
+      - name: Build and start containers
+        run: docker compose up --build -d
+      - name: Wait for API and worker readiness
+        run: |
+          for attempt in $(seq 1 120); do
+            if curl -fsS http://127.0.0.1:8000/readyz; then exit 0; fi
+            sleep 2
+          done
+          docker compose logs --tail 80
+          exit 1
+      - name: Full HTTP demo acceptance
+        run: python3 scripts/http_smoke.py
+      - name: Logs
+        if: failure()
+        run: docker compose logs --tail 100
+      - name: Stop isolated environment
+        if: always()
+        run: docker compose down -v

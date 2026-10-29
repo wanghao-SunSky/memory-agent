@@ -14,3 +14,5 @@ reports/*.log
 /docs/learning/
 /docs/progress.md
 /docs/Agent知识与项目结合方案-*.md
+
+!.env.example

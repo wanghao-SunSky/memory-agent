@@ -94,3 +94,57 @@ def test_expired_lease_is_reclaimed(engine, owner):
         c.execute(text("UPDATE jobs SET locked_until = now() - interval '1 second' WHERE id=:i"), {"i": jid})
     j2 = jobs.claim(engine, "new-worker")
     assert j2["id"] == jid and j2["attempts"] == 2
+
+
+def test_targeted_claim_does_not_take_unrelated_job(engine, owner):
+    a, b = _enqueue(engine, space(engine, owner), 2)
+    assert jobs.claim(engine, "evaluator", job_id=b)["id"] == b
+    assert job(engine, a)["status"] == "queued"
+    assert jobs.claim(engine, "evaluator", job_id=b) is None
+
+
+def test_stale_worker_cannot_execute_or_mark_failure(engine, owner):
+    from memory_agent.engine import process_extract_job
+    (jid,) = _enqueue(engine, space(engine, owner), 1)
+    old = jobs.claim(engine, "old")
+    with engine.begin() as conn:
+        conn.execute(text("UPDATE jobs SET locked_until=now()-interval '1 second' WHERE id=:id"), {"id": jid})
+    new = jobs.claim(engine, "new")
+    assert process_extract_job(engine, old) == {"skipped": "job lease no longer owned"}
+    assert jobs.mark_failed(engine, old, RuntimeError("late failure"), None) == "stale"
+    assert job(engine, jid)["status"] == "running"
+    assert job(engine, jid)["attempts"] == new["attempts"]
+
+
+def test_executing_job_is_not_reclaimed_after_lease_expires(engine, owner, monkeypatch):
+    from memory_agent import engine as processor
+    (jid,) = _enqueue(engine, space(engine, owner), 1)
+    claimed = jobs.claim(engine, "slow")
+    with engine.begin() as conn:
+        conn.execute(text("UPDATE jobs SET locked_until=now()-interval '1 second' WHERE id=:id"), {"id": jid})
+    entered, release = threading.Event(), threading.Event()
+    errors = []
+
+    def slow_extract(*_):
+        entered.set()
+        assert release.wait(3)
+        return [], {"input_tokens": 0, "output_tokens": 0}
+
+    def process():
+        try:
+            processor.process_extract_job(engine, claimed)
+        except Exception as exc:
+            errors.append(exc)
+
+    monkeypatch.setattr(processor, "extract", slow_extract)
+    thread = threading.Thread(target=process)
+    thread.start()
+    try:
+        assert entered.wait(3)
+        assert jobs.claim(engine, "competitor", job_id=jid) is None
+        jobs.heartbeat(engine, "slow")  # heartbeat must also skip the executing row
+    finally:
+        release.set()
+        thread.join(5)
+    assert not thread.is_alive() and not errors
+    assert job(engine, jid)["status"] == "done"
