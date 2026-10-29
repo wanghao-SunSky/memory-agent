@@ -1,20 +1,32 @@
 {
-  "run_at": "2026-10-29T13:03:44.679620+00:00",
+  "run_at": "2026-10-29T13:09:45.417758+00:00",
   "mode": "live",
   "model": "deepseek-chat",
   "repeats": 1,
   "dataset": "evals/cases.json",
-  "limits": "8 synthetic cases; literal checks, not general model accuracy. Demo is rules, not an LLM. Query timings exclude writes. No dollar cost estimate without provider billing rates.",
+  "limits": "8 synthetic cases; date-normalized literal checks, not general model accuracy. Query timings exclude writes. No dollar cost estimate without provider billing rates.",
   "summary": {
     "recall": {
       "passed": 8,
       "total": 8,
-      "query_median_ms": 453.0
+      "query_median_ms": 391.85,
+      "answered_query_median_ms": 973.7,
+      "abstained_query_median_ms": 5.5,
+      "query_tokens": {
+        "input_tokens": 2602,
+        "output_tokens": 351
+      }
     },
     "investigate": {
       "passed": 8,
       "total": 8,
-      "query_median_ms": 4028.1
+      "query_median_ms": 3230.3999999999996,
+      "answered_query_median_ms": 3491.3,
+      "abstained_query_median_ms": 2893.0,
+      "query_tokens": {
+        "input_tokens": 24651,
+        "output_tokens": 1614
+      }
     }
   },
   "results": [
@@ -33,7 +45,7 @@
       "answer": "云杉实验室终面安排在 2026-11-09（周一）上午。",
       "abstain": false,
       "used_memory_ids": [
-        82
+        106
       ],
       "query_usage": {
         "input_tokens": 636,
@@ -44,13 +56,13 @@
         "output_tokens": 130
       },
       "latency_ms": {
-        "retrieval": 2.7,
-        "total": 1079.9
+        "retrieval": 2.6,
+        "total": 6500.5
       },
       "steps": [],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 2743.0
+      "total_ms": 8086.1
     },
     {
       "case": "E01",
@@ -62,25 +74,26 @@
         "abstention": true,
         "citations": true,
         "expected_content": true,
+        "searched": true,
         "finished": true
       },
-      "answer": "云杉实验室终面安排在 2026-11-09 上午（该信息自 2026-10-23 起记录，暂无后续变更记录）。",
+      "answer": "云杉实验室终面安排在 2026 年 11 月 9 日上午（该信息自 2026-10-23 起有效，截至 2026-10-29 仍适用）。",
       "abstain": false,
       "used_memory_ids": [
-        83
+        107
       ],
       "query_usage": {
-        "input_tokens": 3522,
-        "output_tokens": 216,
-        "requests": 4
+        "input_tokens": 2843,
+        "output_tokens": 192,
+        "requests": 3
       },
       "write_usage": {
         "input_tokens": 1637,
         "output_tokens": 130
       },
       "latency_ms": {
-        "retrieval": 24.1,
-        "total": 4456.2
+        "retrieval": 33.4,
+        "total": 6365.4
       },
       "steps": [
         {
@@ -89,21 +102,22 @@
           "status": "ok"
         },
         {
-          "tool": "get_memory_history",
-          "memory_id": 83,
-          "count": 0,
-          "status": "ok"
-        },
-        {
           "tool": "get_source_evidence",
-          "memory_id": 83,
+          "memory_id": 107,
           "count": 1,
           "status": "ok"
         }
       ],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 5556.0
+      "total_ms": 9787.7,
+      "previous_checks": {
+        "abstention": true,
+        "citations": true,
+        "expected_content": false,
+        "searched": true,
+        "finished": true
+      }
     },
     {
       "case": "E02",
@@ -120,7 +134,7 @@
       "answer": "晨星项目评审现在定在 2026-11-12（周四）下午。原定 2026-11-10（周二）下午，已作废。",
       "abstain": false,
       "used_memory_ids": [
-        85
+        109
       ],
       "query_usage": {
         "input_tokens": 690,
@@ -128,16 +142,16 @@
       },
       "write_usage": {
         "input_tokens": 4104,
-        "output_tokens": 359
+        "output_tokens": 353
       },
       "latency_ms": {
-        "retrieval": 5.4,
-        "total": 895.4
+        "retrieval": 3.2,
+        "total": 940.9
       },
       "steps": [],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 5403.2
+      "total_ms": 6234.0
     },
     {
       "case": "E02",
@@ -149,25 +163,26 @@
         "abstention": true,
         "citations": true,
         "expected_content": true,
+        "searched": true,
         "finished": true
       },
-      "answer": "晨星项目评审现在定在 2026-11-12 下午。此前曾安排在 2026-11-10 下午，2026-10-24 起改为 11-12 下午（原安排已失效）。",
+      "answer": "晨星项目评审现在定在 2026-11-12 下午。此前曾安排在 2026-11-10 下午，10 月 24 日改为 11 月 12 日。",
       "abstain": false,
       "used_memory_ids": [
-        87
+        111
       ],
       "query_usage": {
-        "input_tokens": 3629,
-        "output_tokens": 229,
+        "input_tokens": 4089,
+        "output_tokens": 255,
         "requests": 4
       },
       "write_usage": {
-        "input_tokens": 4111,
-        "output_tokens": 366
+        "input_tokens": 4104,
+        "output_tokens": 353
       },
       "latency_ms": {
-        "retrieval": 13.8,
-        "total": 4155.6
+        "retrieval": 16.8,
+        "total": 3491.3
       },
       "steps": [
         {
@@ -177,20 +192,26 @@
         },
         {
           "tool": "get_memory_history",
-          "memory_id": 87,
+          "memory_id": 111,
           "count": 1,
           "status": "ok"
         },
         {
           "tool": "get_source_evidence",
-          "memory_id": 87,
+          "memory_id": 111,
+          "count": 1,
+          "status": "ok"
+        },
+        {
+          "tool": "get_source_evidence",
+          "memory_id": 110,
           "count": 1,
           "status": "ok"
         }
       ],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 8420.5
+      "total_ms": 7112.0
     },
     {
       "case": "E03",
@@ -208,7 +229,7 @@
       "answer": "白鹭科技二面安排在 2026-11-11（周三）下午。",
       "abstain": false,
       "used_memory_ids": [
-        88
+        112
       ],
       "query_usage": {
         "input_tokens": 638,
@@ -219,13 +240,13 @@
         "output_tokens": 371
       },
       "latency_ms": {
-        "retrieval": 7.2,
-        "total": 1190.5
+        "retrieval": 7.8,
+        "total": 973.7
       },
       "steps": [],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 6420.1
+      "total_ms": 4503.4
     },
     {
       "case": "E03",
@@ -238,25 +259,26 @@
         "citations": true,
         "expected_content": true,
         "no_future_content": true,
+        "searched": true,
         "finished": true
       },
-      "answer": "白鹭科技二面安排在 2026-11-11 下午（该信息记录于 2026-10-23）。",
+      "answer": "白鹭科技二面安排在 2026-11-11 下午（该信息在 2026-10-23 有效）。",
       "abstain": false,
       "used_memory_ids": [
-        90
+        114
       ],
       "query_usage": {
-        "input_tokens": 2612,
-        "output_tokens": 174,
+        "input_tokens": 2840,
+        "output_tokens": 175,
         "requests": 3
       },
       "write_usage": {
-        "input_tokens": 4113,
-        "output_tokens": 371
+        "input_tokens": 4120,
+        "output_tokens": 378
       },
       "latency_ms": {
-        "retrieval": 12.7,
-        "total": 3783.1
+        "retrieval": 15.1,
+        "total": 3204.7
       },
       "steps": [
         {
@@ -266,14 +288,14 @@
         },
         {
           "tool": "get_source_evidence",
-          "memory_id": 90,
+          "memory_id": 114,
           "count": 1,
           "status": "ok"
         }
       ],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 7677.4
+      "total_ms": 6314.4
     },
     {
       "case": "E04",
@@ -298,13 +320,13 @@
         "output_tokens": 0
       },
       "latency_ms": {
-        "retrieval": 10.6,
-        "total": 10.6
+        "retrieval": 11.5,
+        "total": 11.6
       },
       "steps": [],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 13.8
+      "total_ms": 14.3
     },
     {
       "case": "E04",
@@ -315,14 +337,15 @@
       "checks": {
         "abstention": true,
         "citations": true,
+        "searched": true,
         "finished": true
       },
       "answer": "没有足够的有效记忆依据，暂时无法回答",
       "abstain": true,
       "used_memory_ids": [],
       "query_usage": {
-        "input_tokens": 2399,
-        "output_tokens": 172,
+        "input_tokens": 2678,
+        "output_tokens": 163,
         "requests": 3
       },
       "write_usage": {
@@ -330,8 +353,8 @@
         "output_tokens": 0
       },
       "latency_ms": {
-        "retrieval": 24.2,
-        "total": 3084.6
+        "retrieval": 21.4,
+        "total": 2282.5
       },
       "steps": [
         {
@@ -347,7 +370,7 @@
       ],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 3085.9
+      "total_ms": 2284.1
     },
     {
       "case": "E05",
@@ -364,21 +387,21 @@
       "abstain": true,
       "used_memory_ids": [],
       "query_usage": {
-        "input_tokens": 636,
+        "input_tokens": 638,
         "output_tokens": 71
       },
       "write_usage": {
         "input_tokens": 1637,
-        "output_tokens": 128
+        "output_tokens": 130
       },
       "latency_ms": {
-        "retrieval": 3.6,
-        "total": 1106.5
+        "retrieval": 6.7,
+        "total": 772.1
       },
       "steps": [],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 2193.6
+      "total_ms": 2189.1
     },
     {
       "case": "E05",
@@ -389,23 +412,24 @@
       "checks": {
         "abstention": true,
         "citations": true,
+        "searched": true,
         "finished": true
       },
       "answer": "没有足够的有效记忆依据，暂时无法回答",
       "abstain": true,
       "used_memory_ids": [],
       "query_usage": {
-        "input_tokens": 2579,
-        "output_tokens": 203,
-        "requests": 3
+        "input_tokens": 4097,
+        "output_tokens": 281,
+        "requests": 4
       },
       "write_usage": {
         "input_tokens": 1637,
         "output_tokens": 130
       },
       "latency_ms": {
-        "retrieval": 20.3,
-        "total": 4838.2
+        "retrieval": 31.1,
+        "total": 4264.0
       },
       "steps": [
         {
@@ -417,11 +441,23 @@
           "tool": "search_memories",
           "count": 1,
           "status": "ok"
+        },
+        {
+          "tool": "get_memory_history",
+          "memory_id": 117,
+          "count": 0,
+          "status": "ok"
+        },
+        {
+          "tool": "get_source_evidence",
+          "memory_id": 117,
+          "count": 1,
+          "status": "ok"
         }
       ],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 6392.8
+      "total_ms": 5243.4
     },
     {
       "case": "E06",
@@ -446,13 +482,13 @@
         "output_tokens": 130
       },
       "latency_ms": {
-        "retrieval": 2.5,
-        "total": 2.6
+        "retrieval": 5.3,
+        "total": 5.5
       },
       "steps": [],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 1721.2
+      "total_ms": 1104.1
     },
     {
       "case": "E06",
@@ -463,93 +499,15 @@
       "checks": {
         "abstention": true,
         "citations": true,
+        "searched": true,
         "finished": true
       },
       "answer": "没有足够的有效记忆依据，暂时无法回答",
       "abstain": true,
       "used_memory_ids": [],
       "query_usage": {
-        "input_tokens": 3336,
-        "output_tokens": 210,
-        "requests": 4
-      },
-      "write_usage": {
-        "input_tokens": 1637,
-        "output_tokens": 130
-      },
-      "latency_ms": {
-        "retrieval": 27.8,
-        "total": 4143.7
-      },
-      "steps": [
-        {
-          "tool": "search_memories",
-          "count": 0,
-          "status": "ok"
-        },
-        {
-          "tool": "search_memories",
-          "count": 0,
-          "status": "ok"
-        },
-        {
-          "tool": "search_memories",
-          "count": 0,
-          "status": "ok"
-        }
-      ],
-      "stop_reason": "completed",
-      "repeat": 1,
-      "total_ms": 5481.3
-    },
-    {
-      "case": "E07",
-      "purpose": "delete_then_recall",
-      "route": "recall",
-      "mode": "live",
-      "passed": true,
-      "checks": {
-        "abstention": true,
-        "citations": true,
-        "finished": true
-      },
-      "answer": "没有相关记忆",
-      "abstain": true,
-      "used_memory_ids": [],
-      "query_usage": {
-        "input_tokens": 0,
-        "output_tokens": 0
-      },
-      "write_usage": {
-        "input_tokens": 1637,
-        "output_tokens": 130
-      },
-      "latency_ms": {
-        "retrieval": 2.7,
-        "total": 2.8
-      },
-      "steps": [],
-      "stop_reason": "completed",
-      "repeat": 1,
-      "total_ms": 1802.5
-    },
-    {
-      "case": "E07",
-      "purpose": "delete_then_recall",
-      "route": "investigate",
-      "mode": "live",
-      "passed": true,
-      "checks": {
-        "abstention": true,
-        "citations": true,
-        "finished": true
-      },
-      "answer": "没有足够的有效记忆依据，暂时无法回答",
-      "abstain": true,
-      "used_memory_ids": [],
-      "query_usage": {
-        "input_tokens": 2424,
-        "output_tokens": 175,
+        "input_tokens": 2703,
+        "output_tokens": 191,
         "requests": 3
       },
       "write_usage": {
@@ -557,8 +515,8 @@
         "output_tokens": 130
       },
       "latency_ms": {
-        "retrieval": 27.0,
-        "total": 3337.0
+        "retrieval": 17.7,
+        "total": 2893.0
       },
       "steps": [
         {
@@ -574,7 +532,82 @@
       ],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 4572.2
+      "total_ms": 4015.0
+    },
+    {
+      "case": "E07",
+      "purpose": "delete_then_recall",
+      "route": "recall",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "finished": true
+      },
+      "answer": "没有相关记忆",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "write_usage": {
+        "input_tokens": 1637,
+        "output_tokens": 130
+      },
+      "latency_ms": {
+        "retrieval": 2.0,
+        "total": 2.0
+      },
+      "steps": [],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 1357.1
+    },
+    {
+      "case": "E07",
+      "purpose": "delete_then_recall",
+      "route": "investigate",
+      "mode": "live",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "searched": true,
+        "finished": true
+      },
+      "answer": "没有足够的有效记忆依据，暂时无法回答",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 2703,
+        "output_tokens": 180,
+        "requests": 3
+      },
+      "write_usage": {
+        "input_tokens": 1637,
+        "output_tokens": 130
+      },
+      "latency_ms": {
+        "retrieval": 30.4,
+        "total": 2771.9
+      },
+      "steps": [
+        {
+          "tool": "search_memories",
+          "count": 0,
+          "status": "ok"
+        },
+        {
+          "tool": "search_memories",
+          "count": 0,
+          "status": "ok"
+        }
+      ],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 3734.0
     },
     {
       "case": "E08",
@@ -599,13 +632,13 @@
         "output_tokens": 130
       },
       "latency_ms": {
-        "retrieval": 4.1,
-        "total": 4.2
+        "retrieval": 3.3,
+        "total": 3.3
       },
       "steps": [],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 1248.6
+      "total_ms": 967.8
     },
     {
       "case": "E08",
@@ -616,30 +649,26 @@
       "checks": {
         "abstention": true,
         "citations": true,
+        "searched": true,
         "finished": true
       },
       "answer": "没有足够的有效记忆依据，暂时无法回答",
       "abstain": true,
       "used_memory_ids": [],
       "query_usage": {
-        "input_tokens": 3405,
-        "output_tokens": 212,
-        "requests": 4
+        "input_tokens": 2698,
+        "output_tokens": 177,
+        "requests": 3
       },
       "write_usage": {
         "input_tokens": 1637,
         "output_tokens": 130
       },
       "latency_ms": {
-        "retrieval": 37.4,
-        "total": 3912.5
+        "retrieval": 18.7,
+        "total": 3256.1
       },
       "steps": [
-        {
-          "tool": "search_memories",
-          "count": 0,
-          "status": "ok"
-        },
         {
           "tool": "search_memories",
           "count": 0,
@@ -653,7 +682,34 @@
       ],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 4917.6
+      "total_ms": 4541.2
     }
-  ]
+  ],
+  "previous_summary": {
+    "recall": {
+      "passed": 8,
+      "total": 8,
+      "query_median_ms": 391.85,
+      "answered_query_median_ms": 973.7,
+      "abstained_query_median_ms": 5.5,
+      "query_tokens": {
+        "input_tokens": 2602,
+        "output_tokens": 351
+      }
+    },
+    "investigate": {
+      "passed": 7,
+      "total": 8,
+      "query_median_ms": 3230.3999999999996,
+      "answered_query_median_ms": 3491.3,
+      "abstained_query_median_ms": 2893.0,
+      "query_tokens": {
+        "input_tokens": 24651,
+        "output_tokens": 1614
+      }
+    }
+  },
+  "scoring_version": "date-normalized-v2",
+  "rescored_at": "2026-10-29T13:11:53.735061+00:00",
+  "scoring_revision_note": "Same frozen model responses, no model rerun: E01 returned the correct date in Chinese (2026 年 11 月 9 日). Date normalization accepts equivalent full dates; original checks are retained on the changed row. Other checks and measured usage/latency unchanged."
 }

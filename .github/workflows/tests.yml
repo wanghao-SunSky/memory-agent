@@ -25,7 +25,7 @@ jobs:
           --health-timeout 3s
           --health-retries 30
     env:
-      DATABASE_URL: postgresql+psycopg://memory:{{PASSWORD_6ucwyprb}}@127.0.0.1:5432/memory_test
+      DATABASE_URL: postgresql+psycopg://memory:memory-ci-only@127.0.0.1:5432/memory_test
       MEMORY_MODEL_MODE: demo
       MEMORY_AUTH_MODE: test
       OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: ''
@@ -40,10 +40,12 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: .local/models
-          key: bge-small-zh-v1.5-linux-v1
+          key: ${{ runner.os }}-bge-small-zh-v1.5
       - run: uv sync --locked
+      - name: Remove reports from earlier local runs
+        run: rm -f reports/last_offline.json reports/evaluation-demo.json
       - name: Enable vector before SQLAlchemy connection hooks
-        run: uv run python -c "import psycopg; c=psycopg.connect('postgresql://memory:{{PASSWORD_6ucwyprb}}@127.0.0.1:5432/memory_test', autocommit=True); c.execute('CREATE EXTENSION IF NOT EXISTS vector'); c.close()"
+        run: uv run python -c "import os, psycopg; c=psycopg.connect(os.environ['DATABASE_URL'].replace('postgresql+psycopg://','postgresql://'), autocommit=True); c.execute('CREATE EXTENSION IF NOT EXISTS vector'); c.close()"
       - run: uv run pytest -q
       - run: uv run python scripts/evaluate.py --mode demo
       - uses: actions/upload-artifact@v4

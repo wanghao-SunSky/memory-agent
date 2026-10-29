@@ -1,16 +1,17 @@
 {
-  "run_at": "2026-10-29T13:08:11.317156+00:00",
+  "run_at": "2026-10-29T13:12:12.815203+00:00",
   "mode": "demo",
   "model": "demo-rules",
   "repeats": 1,
   "dataset": "evals/cases.json",
-  "limits": "8 synthetic cases; literal checks, not general model accuracy. Demo is rules, not an LLM. Query timings exclude writes. No dollar cost estimate without provider billing rates.",
+  "scoring_version": "date-normalized-v2",
+  "limits": "8 synthetic cases; date-normalized literal checks, not general model accuracy. Demo is rules, not an LLM; its token counts are framework estimates, not billable usage. Query timings exclude writes. No dollar cost estimate without provider billing rates.",
   "summary": {
     "recall": {
       "passed": 8,
       "total": 8,
-      "query_median_ms": 5.3,
-      "answered_query_median_ms": 8.1,
+      "query_median_ms": 4.8,
+      "answered_query_median_ms": 7.6,
       "abstained_query_median_ms": 2.3,
       "query_tokens": {
         "input_tokens": 285,
@@ -20,9 +21,9 @@
     "investigate": {
       "passed": 8,
       "total": 8,
-      "query_median_ms": 12.350000000000001,
-      "answered_query_median_ms": 27.2,
-      "abstained_query_median_ms": 9.6,
+      "query_median_ms": 11.5,
+      "answered_query_median_ms": 15.7,
+      "abstained_query_median_ms": 8.6,
       "query_tokens": {
         "input_tokens": 1700,
         "output_tokens": 264
@@ -56,13 +57,13 @@
         "output_tokens": 16
       },
       "latency_ms": {
-        "retrieval": 2.6,
-        "total": 9.3
+        "retrieval": 2.5,
+        "total": 8.2
       },
       "steps": [],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 284.1
+      "total_ms": 243.8
     },
     {
       "case": "E01",
@@ -92,8 +93,8 @@
         "output_tokens": 16
       },
       "latency_ms": {
-        "retrieval": 13.5,
-        "total": 27.2
+        "retrieval": 11.7,
+        "total": 22.9
       },
       "steps": [
         {
@@ -116,7 +117,7 @@
       ],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 47.7
+      "total_ms": 38.9
     },
     {
       "case": "E02",
@@ -144,8 +145,8 @@
         "output_tokens": 41
       },
       "latency_ms": {
-        "retrieval": 3.5,
-        "total": 8.1
+        "retrieval": 3.2,
+        "total": 7.6
       },
       "steps": [],
       "stop_reason": "completed",
@@ -180,8 +181,8 @@
         "output_tokens": 41
       },
       "latency_ms": {
-        "retrieval": 8.8,
-        "total": 45.5
+        "retrieval": 5.2,
+        "total": 15.7
       },
       "steps": [
         {
@@ -204,7 +205,7 @@
       ],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 92.4
+      "total_ms": 51.9
     },
     {
       "case": "E03",
@@ -233,13 +234,13 @@
         "output_tokens": 41
       },
       "latency_ms": {
-        "retrieval": 2.5,
-        "total": 7.1
+        "retrieval": 2.8,
+        "total": 7.6
       },
       "steps": [],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 56.1
+      "total_ms": 50.6
     },
     {
       "case": "E03",
@@ -270,8 +271,8 @@
         "output_tokens": 41
       },
       "latency_ms": {
-        "retrieval": 3.6,
-        "total": 14.4
+        "retrieval": 3.8,
+        "total": 14.1
       },
       "steps": [
         {
@@ -294,7 +295,7 @@
       ],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 51.0
+      "total_ms": 48.5
     },
     {
       "case": "E04",
@@ -319,13 +320,13 @@
         "output_tokens": 0
       },
       "latency_ms": {
-        "retrieval": 2.0,
+        "retrieval": 1.9,
         "total": 2.0
       },
       "steps": [],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 2.7
+      "total_ms": 3.5
     },
     {
       "case": "E04",
@@ -352,8 +353,8 @@
         "output_tokens": 0
       },
       "latency_ms": {
-        "retrieval": 3.6,
-        "total": 10.3
+        "retrieval": 3.0,
+        "total": 8.3
       },
       "steps": [
         {
@@ -364,7 +365,7 @@
       ],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 11.3
+      "total_ms": 9.1
     },
     {
       "case": "E05",
@@ -389,13 +390,13 @@
         "output_tokens": 16
       },
       "latency_ms": {
-        "retrieval": 2.9,
-        "total": 7.2
+        "retrieval": 2.7,
+        "total": 7.3
       },
       "steps": [],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 23.5
+      "total_ms": 22.8
     },
     {
       "case": "E05",
@@ -422,8 +423,8 @@
         "output_tokens": 16
       },
       "latency_ms": {
-        "retrieval": 4.5,
-        "total": 16.6
+        "retrieval": 4.6,
+        "total": 16.3
       },
       "steps": [
         {
@@ -446,151 +447,11 @@
       ],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 31.7
+      "total_ms": 33.3
     },
     {
       "case": "E06",
       "purpose": "space_isolation",
-      "route": "recall",
-      "mode": "demo",
-      "passed": true,
-      "checks": {
-        "abstention": true,
-        "citations": true,
-        "finished": true
-      },
-      "answer": "没有相关记忆",
-      "abstain": true,
-      "used_memory_ids": [],
-      "query_usage": {
-        "input_tokens": 0,
-        "output_tokens": 0
-      },
-      "write_usage": {
-        "input_tokens": 134,
-        "output_tokens": 16
-      },
-      "latency_ms": {
-        "retrieval": 3.4,
-        "total": 3.5
-      },
-      "steps": [],
-      "stop_reason": "completed",
-      "repeat": 1,
-      "total_ms": 20.7
-    },
-    {
-      "case": "E06",
-      "purpose": "space_isolation",
-      "route": "investigate",
-      "mode": "demo",
-      "passed": true,
-      "checks": {
-        "abstention": true,
-        "citations": true,
-        "searched": true,
-        "finished": true
-      },
-      "answer": "没有足够的有效记忆依据，暂时无法回答",
-      "abstain": true,
-      "used_memory_ids": [],
-      "query_usage": {
-        "input_tokens": 124,
-        "output_tokens": 18,
-        "requests": 2
-      },
-      "write_usage": {
-        "input_tokens": 134,
-        "output_tokens": 16
-      },
-      "latency_ms": {
-        "retrieval": 3.3,
-        "total": 9.6
-      },
-      "steps": [
-        {
-          "tool": "search_memories",
-          "count": 0,
-          "status": "ok"
-        }
-      ],
-      "stop_reason": "completed",
-      "repeat": 1,
-      "total_ms": 26.2
-    },
-    {
-      "case": "E07",
-      "purpose": "delete_then_recall",
-      "route": "recall",
-      "mode": "demo",
-      "passed": true,
-      "checks": {
-        "abstention": true,
-        "citations": true,
-        "finished": true
-      },
-      "answer": "没有相关记忆",
-      "abstain": true,
-      "used_memory_ids": [],
-      "query_usage": {
-        "input_tokens": 0,
-        "output_tokens": 0
-      },
-      "write_usage": {
-        "input_tokens": 134,
-        "output_tokens": 16
-      },
-      "latency_ms": {
-        "retrieval": 2.0,
-        "total": 2.0
-      },
-      "steps": [],
-      "stop_reason": "completed",
-      "repeat": 1,
-      "total_ms": 35.5
-    },
-    {
-      "case": "E07",
-      "purpose": "delete_then_recall",
-      "route": "investigate",
-      "mode": "demo",
-      "passed": true,
-      "checks": {
-        "abstention": true,
-        "citations": true,
-        "searched": true,
-        "finished": true
-      },
-      "answer": "没有足够的有效记忆依据，暂时无法回答",
-      "abstain": true,
-      "used_memory_ids": [],
-      "query_usage": {
-        "input_tokens": 124,
-        "output_tokens": 18,
-        "requests": 2
-      },
-      "write_usage": {
-        "input_tokens": 134,
-        "output_tokens": 16
-      },
-      "latency_ms": {
-        "retrieval": 3.3,
-        "total": 9.2
-      },
-      "steps": [
-        {
-          "tool": "search_memories",
-          "count": 0,
-          "status": "ok"
-        }
-      ],
-      "stop_reason": "completed",
-      "repeat": 1,
-      "total_ms": 43.1
-    },
-    {
-      "case": "E08",
-      "purpose": "before_fact",
       "route": "recall",
       "mode": "demo",
       "passed": true,
@@ -620,6 +481,146 @@
       "total_ms": 19.9
     },
     {
+      "case": "E06",
+      "purpose": "space_isolation",
+      "route": "investigate",
+      "mode": "demo",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "searched": true,
+        "finished": true
+      },
+      "answer": "没有足够的有效记忆依据，暂时无法回答",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 124,
+        "output_tokens": 18,
+        "requests": 2
+      },
+      "write_usage": {
+        "input_tokens": 134,
+        "output_tokens": 16
+      },
+      "latency_ms": {
+        "retrieval": 3.1,
+        "total": 8.5
+      },
+      "steps": [
+        {
+          "tool": "search_memories",
+          "count": 0,
+          "status": "ok"
+        }
+      ],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 23.0
+    },
+    {
+      "case": "E07",
+      "purpose": "delete_then_recall",
+      "route": "recall",
+      "mode": "demo",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "finished": true
+      },
+      "answer": "没有相关记忆",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "write_usage": {
+        "input_tokens": 134,
+        "output_tokens": 16
+      },
+      "latency_ms": {
+        "retrieval": 2.2,
+        "total": 2.3
+      },
+      "steps": [],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 34.4
+    },
+    {
+      "case": "E07",
+      "purpose": "delete_then_recall",
+      "route": "investigate",
+      "mode": "demo",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "searched": true,
+        "finished": true
+      },
+      "answer": "没有足够的有效记忆依据，暂时无法回答",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 124,
+        "output_tokens": 18,
+        "requests": 2
+      },
+      "write_usage": {
+        "input_tokens": 134,
+        "output_tokens": 16
+      },
+      "latency_ms": {
+        "retrieval": 2.9,
+        "total": 8.6
+      },
+      "steps": [
+        {
+          "tool": "search_memories",
+          "count": 0,
+          "status": "ok"
+        }
+      ],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 40.9
+    },
+    {
+      "case": "E08",
+      "purpose": "before_fact",
+      "route": "recall",
+      "mode": "demo",
+      "passed": true,
+      "checks": {
+        "abstention": true,
+        "citations": true,
+        "finished": true
+      },
+      "answer": "没有相关记忆",
+      "abstain": true,
+      "used_memory_ids": [],
+      "query_usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "write_usage": {
+        "input_tokens": 134,
+        "output_tokens": 16
+      },
+      "latency_ms": {
+        "retrieval": 2.0,
+        "total": 2.1
+      },
+      "steps": [],
+      "stop_reason": "completed",
+      "repeat": 1,
+      "total_ms": 18.7
+    },
+    {
       "case": "E08",
       "purpose": "before_fact",
       "route": "investigate",
@@ -644,8 +645,8 @@
         "output_tokens": 16
       },
       "latency_ms": {
-        "retrieval": 3.1,
-        "total": 8.6
+        "retrieval": 3.2,
+        "total": 8.9
       },
       "steps": [
         {
@@ -656,7 +657,7 @@
       ],
       "stop_reason": "completed",
       "repeat": 1,
-      "total_ms": 23.5
+      "total_ms": 24.3
     }
   ]
 }

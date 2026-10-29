@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
+import re
 import statistics
 import sys
 import time
@@ -24,6 +25,17 @@ from memory_agent.store import get_space_id, ingest_episode
 from memory_agent.worker import run_once
 
 ROOT = Path(__file__).resolve().parents[1]
+SCORING_VERSION = "date-normalized-v2"
+
+
+def normalize_dates(value: str) -> str:
+    """仅统一完整年月日格式；不接受错日期，也不推断省略的年份。"""
+    def replace(match):
+        try:
+            return datetime(*(int(part) for part in match.groups())).date().isoformat()
+        except ValueError:
+            return match.group(0)
+    return re.sub(r"(?<!\d)(\d{4})\s*(?:年|-)\s*(\d{1,2})\s*(?:月|-)\s*(\d{1,2})(?:\s*日)?(?!\d)", replace, value)
 
 
 def score(case, result):
@@ -31,9 +43,9 @@ def score(case, result):
     checks = {"abstention": result["abstain"] is case["abstain"],
               "citations": not result["used_memory_ids"] if result["abstain"] else bool(result["used_memory_ids"])}
     if case.get("contains"):
-        checks["expected_content"] = case["contains"] in result["answer"]
+        checks["expected_content"] = normalize_dates(case["contains"]) in normalize_dates(result["answer"])
     if case.get("forbidden"):
-        checks["no_future_content"] = case["forbidden"] not in json.dumps(result, ensure_ascii=False)
+        checks["no_future_content"] = normalize_dates(case["forbidden"]) not in normalize_dates(json.dumps(result, ensure_ascii=False))
     if "steps" in result:
         checks["searched"] = any(s["tool"] == "search_memories" for s in result["steps"])
     checks["finished"] = result.get("stop_reason", "completed") == "completed"
@@ -121,8 +133,8 @@ def main():
                           "query_tokens": {key: sum(r.get("query_usage", {}).get(key, 0) for r in rows)
                                            for key in ("input_tokens", "output_tokens")}}
     report = {"run_at": datetime.now(timezone.utc).isoformat(), "mode": args.mode,
-              "model": llm.model_name("answer"), "repeats": args.repeats, "dataset": "evals/cases.json",
-              "limits": "8 synthetic cases; literal checks, not general model accuracy. Demo is rules, not an LLM. Query timings exclude writes. No dollar cost estimate without provider billing rates.",
+              "model": llm.model_name("answer"), "repeats": args.repeats, "dataset": "evals/cases.json", "scoring_version": SCORING_VERSION,
+              "limits": "8 synthetic cases; date-normalized literal checks, not general model accuracy. Demo is rules, not an LLM; its token counts are framework estimates, not billable usage. Query timings exclude writes. No dollar cost estimate without provider billing rates.",
               "summary": summary, "results": results}
     output = args.output or ROOT / f"reports/evaluation-{args.mode}.json"
     output.parent.mkdir(parents=True, exist_ok=True)
